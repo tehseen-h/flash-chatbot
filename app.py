@@ -15,12 +15,12 @@ api_key = st.secrets["GOOGLE_API_KEY"]
 # Step 2: Google Sheets setup using Streamlit secrets
 def init_sheet():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    
-    # Load credentials from Streamlit secrets
-    creds_dict = st.secrets["gcp_service_account"]
-    creds_json = json.loads(json.dumps(creds_dict))  # Convert TOML → dict
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
-    
+
+    # ✅ No need to convert via json.loads/json.dumps
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        st.secrets["gcp_service_account"], scope
+    )
+
     client = gspread.authorize(creds)
     sheet = client.open("ChatLogs prompts").sheet1
     return sheet
